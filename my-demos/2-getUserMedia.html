@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<video id="video1" autoplay playsinline></video>
+
+<script>
+    let constraints = {
+        audio: true,
+        video: true
+    }
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(mediaStream => {
+            console.log(mediaStream)
+            let video1 = document.getElementById('video1')
+            console.log(video1)
+            video1.srcObject = mediaStream;
+        })
+        .catch(err => {
+            console.log(err)
+        })
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "webrtc_demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sigserver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "sudo node sigserver.js",
+    "start": "sudo node sigserver.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "log4js": "^6.4.1",
+    "serve-index": "^1.9.1",
+    "socket.io": "^4.4.1"
+  }
+}

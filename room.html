@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebRTC PeerConnection</title>
+    <link href="/css/client.css" rel="stylesheet"/>
+</head>
+
+<body>
+<div>
+    <!--
+        用户操作区， 包括两个Button ：
+         一个用户连接信令服务器； 另一个用户与信令服务器断开连接
+    -->
+    <div>
+        <button id="connserver">ConnServer</button>
+        <button id="leave" disabled>Leave</button>
+    </div>
+
+    <!--
+        显示区， 用于展示：
+        ·视频
+        ·Offer/Answer
+    -->
+    <div id="preview">
+        <!--
+            本地视频与Offer 的展示区
+        -->
+        <div>
+            <h2>Local:</h2>
+            <video id="localvideo" autoplay playsinline muted></video>
+            <h2>Offer SDP:</h2>
+            <textarea id="offer"></textarea>
+        </div>
+        <!--
+             远端视频与Answer 的展示区
+        -->
+        <div>
+            <h2>Remote:</h2>
+            <video id="remotevideo" autoplay playsinline></video>
+            <h2>Answer SDP:</h2>
+            <textarea id="answer"></textarea>
+        </div>
+    </div>
+</div>
+
+<!--
+    引用的JavaScript 脚本库：
+    socket.io.js ： 用于连接信令服务器
+    adapter-latest.js ： 用于浏览器适配Chrome , Firefox …
+    client.js ： WebRTC 客户端代码
+-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>-->
+<script src="https://cdn.bootcdn.net/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="/js/client.js"></script>
+</body>
+</html>

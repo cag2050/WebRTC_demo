@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    //RTCPeerConnection
+    let config = {
+        bundlePolicy: "max-bundle"
+    };
+    let peerConnection = new RTCPeerConnection(config);
+    // console.log(peerConnection)
+    //执行setLocalDescription方法之后，onicecandidate事件会执行
+    //ICE是在各端调用setLocalDescription（）接口后就开始了
+    peerConnection.onicecandidate = (event) => {
+        console.log('peerConnection.onicecandidate event:', event)
+    }
+    //getUserMedia
+    let constraints = {
+        audio: true,
+        video: true
+    }
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(mediaStream => {
+            // console.log(mediaStream.getTracks())
+            mediaStream.getTracks().forEach(track => {
+                console.log('track:', track)
+                peerConnection.addTrack(track, mediaStream)
+            })
+            peerConnection.createOffer()
+                .then(sessionDescriptionInit => {
+                    console.log(sessionDescriptionInit)
+                    peerConnection.setLocalDescription(new RTCSessionDescription({
+                        // 有时候sdp会做一些处理
+                        sdp: sessionDescriptionInit.sdp,
+                        type: 'offer'
+                    }))
+                })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+</script>
+</body>
+</html>
