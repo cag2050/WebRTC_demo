@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    navigator.mediaDevices.getDisplayMedia({
+        video: true,
+    })
+        .then(mediaStream => {
+            console.log(mediaStream)
+            mediaStream.getTracks().forEach(track => {
+                console.log('track:', track)
+            })
+        })
+        .catch(err => {
+            console.log(typeof err)
+            console.log(err)
+        })
+</script>
+</body>
+</html>
