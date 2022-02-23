@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .video {
+            width: 320px;
+            height: 240px;
+        }
+        .fl {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div class="fl">
+    <button onclick="startRecord()">开始录制</button>
+    <button onclick="pauseRecord()">暂停录制</button>
+    <button onclick="resumeRecord()">继续录制</button>
+    <button onclick="stopRecord()">停止录制</button>
+    <button onclick="playbackAudio()">播放录制的音频</button>
+    <button onclick="playbackAudioAndVideo()">播放录制的音频和视频</button>
+</div>
+<div class="fl">
+    <video id="video1" controls autoplay playsinline class="video"></video>
+</div>
+<div class="fl">
+    <audio id="audio1" controls autoplay playsinline></audio>
+</div>
+<div class="fl">
+    <video id="video2" controls autoplay playsinline class="video"></video>
+</div>
+
+<script>
+    let mediaRecorder = null
+    let chunks = []
+
+    let constraints = {
+        audio: true,
+        video: true
+    }
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(mediaStream => {
+            console.log('mediaStream:,', mediaStream)
+            let video1 = document.getElementById('video1')
+            video1.srcObject = mediaStream
+
+            for (let track of mediaStream.getTracks()) {
+                console.log('track:', track)
+            }
+            mediaRecorder = new MediaRecorder(mediaStream)
+            console.log('mediaRecorder:')
+            console.dir(mediaRecorder)
+        })
+        .catch(err => {
+            console.dir(err)
+        })
+
+    function startRecord() {
+        // 如果指定了timeslice，当Blob缓存区写满后，触发dataavailable事件，并重新创建一个Blob对象。如果未指定timeslice，则录制数据会始终写入同一个Blob对象，直到调用requestData()方法才会重新创建新的Blob对象。单位为毫秒（ms）。
+        mediaRecorder.start(200)
+        mediaRecorder.ondataavailable = (event) => {
+            chunks.push(event.data)
+            console.log(event)
+        }
+        /*
+        let recorderIntervalHandler = setInterval(() => {
+            // requestData()方法触发dataavailable事件，事件包含Blob格式的录制数据。该方法通常需要周期性调用。
+            mediaRecorder.requestData()
+        }, 1000)
+        setTimeout(() => {
+            clearInterval(recorderIntervalHandler)
+        }, 5000)
+        */
+    }
+
+    function pauseRecord() {
+        if (mediaRecorder.state === 'recording') {
+            console.log('pauseRecord')
+            mediaRecorder.pause()
+        }
+    }
+
+    function resumeRecord() {
+        if (mediaRecorder.state === 'paused') {
+            console.log('resumeRecord')
+            mediaRecorder.resume()
+        }
+    }
+
+    function stopRecord() {
+        console.log('stopRecord')
+        if (mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop()
+        }
+    }
+
+    function playbackAudio() {
+        let audio1 = document.getElementById('audio1')
+        let blob = new Blob(chunks, {
+            type: 'audio/ogg;codecs=opus'
+        })
+        let url = URL.createObjectURL(blob)
+        audio1.src = url
+        console.log('playbackAudio()')
+    }
+
+    function playbackAudioAndVideo() {
+        let video2 = document.getElementById('video2')
+        let blob = new Blob(chunks, {
+            type: 'video/x-matroska;codecs=avc1,opus'
+        })
+        let url = URL.createObjectURL(blob)
+        video2.src = url
+        console.log('playbackAudioAndVideo()')
+    }
+</script>
+</body>
+</html>

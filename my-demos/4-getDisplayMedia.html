@@ -5,15 +5,37 @@
     <title>Title</title>
 </head>
 <body>
+<video id="video1" autoplay playsinline></video>
+
 <script>
     navigator.mediaDevices.getDisplayMedia({
         video: true,
+        audio: true,// 添加此行时，【选择要分享什么】窗口的【Chrome标签页】tab下面会有一个单选框【分享标签页中的音频】；如果选择此单选框，会有2个track
     })
         .then(mediaStream => {
             console.log(mediaStream)
+            let video1 = document.getElementById('video1')
+            video1.srcObject = mediaStream
+
+            mediaStream.oninactive = () => {
+                console.log('mediaStream oninactive')
+            }
+
             mediaStream.getTracks().forEach(track => {
                 console.log('track:', track)
             })
+            if(mediaStream.getTracks()[0]) {
+                let track0 = mediaStream.getTracks()[0];
+                track0.onended = () => {
+                    console.log('track0 onended')
+                }
+            }
+            if(mediaStream.getTracks()[1]) {
+                let track1 = mediaStream.getTracks()[1];
+                track1.onended = () => {
+                    console.log('track1 onended')
+                }
+            }
         })
         .catch(err => {
             console.log(typeof err)

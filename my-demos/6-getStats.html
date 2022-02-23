@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    let config = {
+        bundlePolicy: "max-bundle"
+    };
+    let peerConnection = new RTCPeerConnection(config);
+
+    peerConnection.getStats(null)
+        .then(rtcStatsReport => {
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+</script>
+</body>
+</html>

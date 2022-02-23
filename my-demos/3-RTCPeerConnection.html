@@ -25,7 +25,7 @@
     }
     navigator.mediaDevices.getUserMedia(constraints)
         .then(mediaStream => {
-            // console.log(mediaStream.getTracks())
+            console.log('mediaStream:', mediaStream)
             mediaStream.getTracks().forEach(track => {
                 console.log('track:', track)
                 peerConnection.addTrack(track, mediaStream)
@@ -33,6 +33,7 @@
             peerConnection.createOffer()
                 .then(sessionDescriptionInit => {
                     console.log(sessionDescriptionInit)
+                    console.log('sdp:', sessionDescriptionInit.sdp)
                     peerConnection.setLocalDescription(new RTCSessionDescription({
                         // 有时候sdp会做一些处理
                         sdp: sessionDescriptionInit.sdp,
