@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设置WebRTC中的麦克风音频音量</title>
+</head>
+<body>
+<div>
+    <button id="startBtn" onclick="start()">Start</button>
+    <button id="stopBtn" onclick="stop()">Stop</button>
+</div>
+<div>
+    <span>麦克风Microphone音量：</span>
+    <select id="inSel">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+        <option>30</option>
+        <option>40</option>
+        <option>50</option>
+        <option>100</option>
+    </select>
+    <div>
+        <audio id="audioIn" controls muted></audio>
+    </div>
+</div>
+<div>
+    <span>扬声器Speaker音量：</span>
+    <select id="outSel">
+        <option>0</option>
+        <option>0.1</option>
+        <option>0.2</option>
+        <option>0.3</option>
+        <option>0.4</option>
+        <option>0.5</option>
+        <option>0.6</option>
+        <option>0.7</option>
+        <option>0.8</option>
+        <option>0.9</option>
+        <option>1</option>
+    </select>
+    <div>
+        <audio id="audioOut" controls autoplay></audio>
+    </div>
+</div>
+
+<script>
+    /**
+     * How to set volumes in WebRTC?
+     * stackoverflow 问题：https://stackoverflow.com/questions/43698961/how-to-set-volumes-in-webrtc
+     * 代码：https://github.com/AjayChoudary/WebRTCUtils/tree/master/web/AjStream
+     * 代码例子：https://ajaychoudary.github.io/WebRTCUtils/web/AjStream/
+     * 其它资料：https://www.cnblogs.com/rustfisher/p/15713126.html
+     * soundmeter.js 一个音频处理的第三方库，用于测算音量值：https://github.com/webrtc/samples/blob/gh-pages/src/content/getusermedia/volume/js/soundmeter.js
+     */
+    let startBtn = document.getElementById('startBtn')
+    let stopBtn = document.getElementById('stopBtn')
+    let inputLevelSelector = document.getElementById('inSel')
+    let outputLevelSelector = document.getElementById('outSel')
+    let audioIn = document.getElementById('audioIn')
+    let audioOut = document.getElementById('audioOut')
+
+    inputLevelSelector.addEventListener('change', changeMicrophoneLevel);
+    outputLevelSelector.addEventListener('change', changeSpeakerLevel);
+
+    let audioStream = null
+    let audioSource = null
+    let audioDestination = null
+
+    let audioContext = new AudioContext()
+    let gainNode = audioContext.createGain()
+
+    function start() {
+        let constraints = {
+            audio: true,
+            video: false
+        }
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(mediaStream => {
+                console.log('mediaStream:', mediaStream)
+                for (let track of mediaStream.getTracks()) {
+                    console.log('track:', track)
+                    if (track.kind == 'audio') {
+                        audioStream = mediaStream
+                        audioIn.srcObject = mediaStream
+                    }
+                }
+            })
+            .then(() => {
+                processStream()
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        startBtn.disabled = true
+        stopBtn.disabled = false
+    }
+
+    function processStream() {
+        if (!audioStream) {
+            return
+        }
+        // 核心代码
+        let audioContext = new AudioContext()
+        console.log('audioContext.currentTime:', audioContext.currentTime)
+        /**
+         * AudioGain对象拥有一个gain属性，属性值为一个用于控制声音音量的AudioParam对象，该对象拥有如下属性。
+         *  minValue属性：只读属性，代表声音的最小音量值，标准值为0。
+         *  maxValue属性：只读属性，代表声音的最大音量值，标准值为1，但是允许将音量值设置为超过该属性值。
+         *  value属性：用于设置声音的音量值。
+         *  defaultValue属性：只读属性，代表value属性值的初始值。
+         */
+        let gainNode = audioContext.createGain()
+        console.log('gainNode.gain:', gainNode.gain)
+        audioSource = audioContext.createMediaStreamSource(audioStream)
+        audioDestination = audioContext.createMediaStreamDestination()
+        // 将声音源与AudioGain对象连接
+        audioSource.connect(gainNode)
+        // 将AudioGain对象与AudioContext对象的destination属性值（代表音频播放设备）相连接
+        gainNode.connect(audioDestination)
+        console.log('gainNode.gain.value:', gainNode.gain.value)
+        // 设置麦克风音量
+        // 这里设置值生效了
+        gainNode.gain.value = 10
+        console.log('gainNode.gain.value:', gainNode.gain.value)
+        audioOut.srcObject = audioDestination.stream
+        for (let track of audioDestination.stream.getTracks()) {
+            console.log('audioDestination.stream track:', track)
+        }
+    }
+
+    function Stop() {
+        startBtn.disabled = false
+        stopBtn.disabled = true
+        if (audioStream) {
+            audioStream.getTracks().forEach((track) => {
+                track.stop()
+            })
+            audioStream = null
+        }
+    }
+
+    function changeMicrophoneLevel(e) {
+        console.log('changeMicrophoneLevel e:', e)
+        console.log('changeMicrophoneLevel e.target.value:', e.target.value)
+        let value = e.target.value
+        if (value >= 0) {
+            // 这里设置值没生效【是因为代码：audioOut.srcObject = audioDestination.stream 是之前设置的吗？】
+            gainNode.gain.value = value
+            console.log('gainNode.gain.value:', gainNode.gain.value)
+        }
+    }
+
+    function changeSpeakerLevel(e) {
+        console.log('changeSpeakerLevel e:', e)
+        console.log('changeSpeakerLevel e.target.value:', e.target.value)
+        let value = e.target.value
+        if (value >= 0 && value <= 1) {
+            // volume 属性设置或返回音频的音量，从 0.0 (静音) 到 1.0 (最大声)。
+            audioOut.volume = value
+        }
+    }
+
+</script>
+
+</body>
+</html>
