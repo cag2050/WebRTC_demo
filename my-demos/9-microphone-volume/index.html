@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实时获取麦克风音量的大小</title>
+</head>
+<body>
+麦克风Microphone音量：
+<input type="range" id="rangeInput1" min="0" max="100">
+
+<script>
+    let rangeInput1 = document.getElementById('rangeInput1')
+    // 设置初始值
+    rangeInput1.value = 0
+
+    let constraints = {
+        audio: true,
+        video: false
+    }
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(mediaStream => {
+            console.log('mediaStream:', mediaStream)
+            for (let track of mediaStream.getTracks()) {
+                console.log('track:', track)
+                if (track.kind == 'audio') {
+                    let audioContext = new AudioContext()
+                    audioContext.audioWorklet.addModule('./volume-processor.js')
+                        .then(() => {
+                            let audioSource = audioContext.createMediaStreamSource(mediaStream)
+                            let audioDestination = audioContext.createMediaStreamDestination()
+                            let workletNode = new AudioWorkletNode(audioContext, 'volume-processor')
+                            workletNode.port.onmessage = event => {
+                                // console.log('port.onmessage event:', event)
+                                console.log('event.data.volume * 100:', event.data.volume * 100)
+                                rangeInput1.value = event.data.volume * 100
+                            }
+                            audioSource.connect(workletNode).connect(audioDestination)
+                        })
+                }
+            }
+        })
+</script>
+</body>
+</html>
