@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 出处：https://weread.qq.com/web/reader/751326d0720befab7514782k38b3252026538b3eff8b041
+    console.log("navigator")
+    console.log(navigator)
+    console.log("navigator.userAgent")
+    console.log(navigator.userAgent)
+    // firefox
+    console.log("navigator.oscpu")
+    console.log(navigator.oscpu)
+    // chrome
+    console.log("navigator.vendor")
+    console.log(navigator.vendor)
+    console.log("navigator.platform")
+    console.log(navigator.platform)
+
+    console.log("screen.colorDepth")
+    console.log(screen.colorDepth)
+    console.log("screen.pixelDepth")
+    console.log(screen.pixelDepth)
+    console.log("screen.orientation")
+    console.log(screen.orientation)
+
+    console.log("navigator.geolocation")
+    console.log(navigator.geolocation)
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            console.log("getCurrentPosition() position")
+            console.log(position)
+        },
+        err => {
+            console.log("getCurrentPosition() err")
+            console.log(err)
+        }
+    )
+    console.log("navigator.onLine")
+    console.log(navigator.onLine)
+
+    window.addEventListener("")
+
+</script>
+</body>
+</html>

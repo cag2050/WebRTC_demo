@@ -16,10 +16,10 @@ class VolumeProcessor extends AudioWorkletProcessor {
         }
     }
 
-    process (inputs, outputs, parameters) {
-        // console.log('inputs:', inputs)
-        // console.log('outputs:', outputs)
-        // console.log('parameters:', parameters)
+    process(inputs, outputs, parameters) {
+        console.log('inputs:', inputs)
+        console.log('outputs:', outputs)
+        console.log('parameters:', parameters)
 
         const input = inputs[0]
         if (input.length > 0) {
@@ -39,14 +39,17 @@ class VolumeProcessor extends AudioWorkletProcessor {
             this._nextUpdateFrame -= samples.length;
             if (this._nextUpdateFrame < 0) {
                 this._nextUpdateFrame += this.intervalInFrames;
-                this.port.postMessage({volume: this._volume});
+                this.port.postMessage({
+                    volume: this._volume
+                });
             }
         }
         // 返回true，继续处理
-        return true
+        // return true
+        return false
     }
 
-    get intervalInFrames () {
+    get intervalInFrames() {
         return this._updateIntervalInMS / 1000 * sampleRate;
     }
 }

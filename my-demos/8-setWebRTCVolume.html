@@ -110,8 +110,8 @@
         console.log('audioContext.currentTime:', audioContext.currentTime)
         /**
          * AudioGain对象拥有一个gain属性，属性值为一个用于控制声音音量的AudioParam对象，该对象拥有如下属性。
-         *  minValue属性：只读属性，代表声音的最小音量值，标准值为0。
-         *  maxValue属性：只读属性，代表声音的最大音量值，标准值为1，但是允许将音量值设置为超过该属性值。
+         *  minValue属性：只读属性，代表声音的最小音量值，标准值为0。默认为 -3.4028235e38。
+         *  maxValue属性：只读属性，代表声音的最大音量值，标准值为1，但是允许将音量值设置为超过该属性值。默认为 3.4028235e38。
          *  value属性：用于设置声音的音量值。
          *  defaultValue属性：只读属性，代表value属性值的初始值。
          */
