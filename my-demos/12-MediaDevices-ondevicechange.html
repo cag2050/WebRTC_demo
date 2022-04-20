@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    navigator.mediaDevices.ondevicechange = (event) => {
+        console.log('ondevicechange event:')
+        console.log(event)
+
+        navigator.mediaDevices.enumerateDevices()
+            .then(mediaDeviceInfos => {
+                console.log("mediaDeviceInfos:")
+                console.log(mediaDeviceInfos)
+                mediaDeviceInfos.forEach(mediaDeviceInfo => {
+                    if (mediaDeviceInfo.kind === "videoinput") {
+                        console.log('videoinput:')
+                        console.log(mediaDeviceInfo)
+                    }
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 原文链接：https://blog.csdn.net/amswait/article/details/121118288
+
+    // 物理像素分辨率与CSS像素分辨率之比；
+    // tips: ie7-10不支持此属性，值为undefined，默认给个1；
+    let dpr = window.devicePixelRatio || 1
+
+    let screenWidth
+    let screenHeight
+    // 如果是移动端需要乘dpr才是真实的分辨率
+    if (/(iPhone|iPad|iPod|iOS|Android|BlackBerry|HarmonyOS)/i.test(navigator.userAgent)) { //移动端
+        screenWidth = window.screen.width * dpr;
+        screenHeight = window.screen.height * dpr
+    } else {
+        screenWidth = window.screen.width
+        screenHeight = window.screen.height
+    }
+    console.log("dpr: ", dpr)
+    console.log("屏幕分辨率: ", screenWidth, "*", screenHeight)
+</script>
+</body>
+</html>
