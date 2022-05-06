@@ -17,6 +17,7 @@
             let video1 = document.getElementById('video1')
             video1.srcObject = mediaStream
 
+            // 点击页面中的【停止共享】按钮，MediaStream 触发 oninactive 事件，同时 MediaStreamTrack 触发 onended 事件
             mediaStream.oninactive = () => {
                 console.log('mediaStream oninactive')
             }
