@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    console.log("navigator.connection:", navigator.connection)
+
+    // 定时打印rtt值
+    setInterval(() => {
+        console.log("navigator.connection.rtt:", navigator.connection.rtt, " ms")
+    }, 2 * 1000)
+
+    // 任何连接状态变化时触发一个change事件
+    navigator.connection.onchange = (event) => {
+        console.log("onchange event:", event)
+        console.log("onchange event.target:", event.target)
+    }
+</script>
+</body>
+</html>

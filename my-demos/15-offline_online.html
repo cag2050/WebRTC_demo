@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 断网和联网处理
+    window.addEventListener("offline", (event) => {
+        console.log("offline event:", event)
+    })
+    window.addEventListener("online", (event) => {
+        console.log("online event:", event)
+    })
+</script>
+</body>
+</html>

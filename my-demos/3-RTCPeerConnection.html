@@ -18,6 +18,33 @@
     peerConnection.onicecandidate = (event) => {
         console.log('peerConnection.onicecandidate event:', event)
     }
+    peerConnection.onconnectionstatechange = event => {
+        console.log('peerConnection.onconnectionstatechange event:', event)
+        // type RTCPeerConnectionState = "closed" | "connected" | "connecting" | "disconnected" | "failed" | "new";
+        switch(peerConnection.connectionState) {
+            case "new":
+                console.log("connectionState: new")
+                break;
+            case "connecting":
+                console.log("connectionState: connecting")
+                break;
+            case "connected":
+                console.log("connectionState: connected")
+                break;
+            case "disconnected":
+                console.log("connectionState: disconnected")
+                break;
+            case "closed":
+                console.log("connectionState: closed")
+                break;
+            case "failed":
+                console.log("connectionState: failed")
+                break;
+            default:
+                console.log("connectionState: Unknown");
+                break;
+        }
+    }
     //getUserMedia
     let constraints = {
         audio: true,
