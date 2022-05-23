@@ -6,10 +6,13 @@
 </head>
 <body>
 <script>
+    // 浏览器断网事件offline和联网事件online：https://blog.csdn.net/web_ding/article/details/118524828
     console.log("navigator.connection:", navigator.connection)
 
     // 定时打印rtt值
+    // onLine 结合 rtt，来判断网络情况
     setInterval(() => {
+        console.log("navigator.onLine：", navigator.onLine)
         console.log("navigator.connection.rtt:", navigator.connection.rtt, " ms")
     }, 2 * 1000)
 
