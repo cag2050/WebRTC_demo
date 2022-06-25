@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 链接：https://juejin.cn/post/6983997274258931719
+    function getDevicePermission(constraints) {
+        return navigator.mediaDevices
+            .getUserMedia(constraints)
+            .then(stream => {
+                if (stream) {
+                    stopStreamTracks(stream);
+                    return true;
+                }
+                return Promise.reject(new Error('EmptyStreamError'));
+            })
+            .catch(errMsg => {
+                if (errMsg && 'NotAllowedError' === errMsg.name) {
+                    return false;
+                }
+                return Promise.reject(errMsg);
+            });
+    }
+
+    function requestPermission() {
+        return getDevicePermission({video: true, audio: true})
+            .catch(() => getDevicePermission({video: false, audio: true}))
+            .catch(() => getDevicePermission({video: true, audio: false}))
+            .catch(() => true);
+    }
+
+    // 释放 mediaStream
+    const stopStreamTracks = stream => {
+        if (!stream || !stream.getTracks) {
+            return;
+        }
+        try {
+            const tracks = stream.getTracks();
+            tracks.forEach(it => {
+                try {
+                    it.stop();
+                } catch (errMsg) {
+                    // debugger;
+                }
+            });
+        } catch (errMsg) {
+            // debugger;
+        }
+    };
+
+    requestPermission()
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+</script>
+
+</body>
+</html>

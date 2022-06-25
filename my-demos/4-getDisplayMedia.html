@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 </head>
 <body>
 <video id="video1" autoplay playsinline></video>
@@ -17,7 +18,7 @@
             let video1 = document.getElementById('video1')
             video1.srcObject = mediaStream
 
-            // 点击页面中的【停止共享】按钮，MediaStream 触发 oninactive 事件，同时 MediaStreamTrack 触发 onended 事件
+            // 点击漂浮栏中的【停止共享】按钮，MediaStream 触发 oninactive 事件，同时 MediaStreamTrack 触发 onended 事件
             mediaStream.oninactive = () => {
                 console.log('mediaStream oninactive')
             }
@@ -25,18 +26,30 @@
             mediaStream.getTracks().forEach(track => {
                 console.log('track:', track)
             })
-            if(mediaStream.getTracks()[0]) {
-                let track0 = mediaStream.getTracks()[0];
-                track0.onended = () => {
-                    console.log('track0 onended')
+            if (mediaStream.getAudioTracks().length > 0) {
+                let audioTrack = mediaStream.getAudioTracks()[0];
+                audioTrack.onended = () => {
+                    console.log('audio track onended')
                 }
             }
-            if(mediaStream.getTracks()[1]) {
-                let track1 = mediaStream.getTracks()[1];
-                track1.onended = () => {
-                    console.log('track1 onended')
+            if (mediaStream.getVideoTracks().length > 0) {
+                let videoTrack = mediaStream.getVideoTracks()[0];
+                videoTrack.onended = () => {
+                    console.log('video track onended')
                 }
             }
+
+            setTimeout(() => {
+                // MediaStream 中所有的 track，都stop()后，【停止共享】所在的漂浮栏消失
+                if (mediaStream.getAudioTracks().length > 0) {
+                    console.log("audio track stop()")
+                    mediaStream.getAudioTracks()[0].stop()
+                }
+                if (mediaStream.getVideoTracks().length > 0) {
+                    console.log("video track stop()")
+                    mediaStream.getVideoTracks()[0].stop()
+                }
+            }, 3 * 1000)
         })
         .catch(err => {
             console.log(typeof err)

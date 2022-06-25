@@ -6,6 +6,7 @@
 </head>
 <body>
 <script>
+    // 在执行 navigator.mediaDevices.enumerateDevices() 方法前先执行以下代码：navigator.mediaDevices.getUserMedia({audio: true, video: true}) 从浏览器获得许可，否则会拿不到设备信息
     navigator.mediaDevices.enumerateDevices()
         .then(mediaDeviceInfos => {
             console.log(mediaDeviceInfos)
