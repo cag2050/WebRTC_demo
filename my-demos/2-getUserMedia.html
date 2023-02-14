@@ -9,8 +9,10 @@
 
 <script>
     let constraints = {
-        audio: true,
+        // audio: true,
+        // audio: false,
         video: true
+        // video: false
     }
     navigator.mediaDevices.getUserMedia(constraints)
         .then(mediaStream => {
@@ -19,8 +21,10 @@
             console.log(video1)
             video1.srcObject = mediaStream;
 
-            for (let track of mediaStream.getTracks()) {
+            for (let track of mediaStream.getVideoTracks()) {
                 console.log(track)
+                // 只关闭video track，即可关闭摄像头
+                // track.stop()
             }
             // 在执行 navigator.mediaDevices.enumerateDevices() 方法前先执行以下代码：navigator.mediaDevices.getUserMedia({audio: true, video: true}) 从浏览器获得许可，否则会拿不到设备信息
             navigator.mediaDevices.enumerateDevices()
@@ -32,7 +36,10 @@
                 })
         })
         .catch(err => {
-            console.log(err)
+            console.error(typeof err)
+            console.error(err instanceof DOMException)
+            console.error("code: " + err.code + ", message: " + err.message + ", name: " + err.name)
+            console.error(err)
         })
 </script>
 </body>

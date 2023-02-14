@@ -9,52 +9,56 @@
 <video id="video1" autoplay playsinline></video>
 
 <script>
-    navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true,// 添加此行时，【选择要分享什么】窗口的【Chrome标签页】tab下面会有一个单选框【分享标签页中的音频】；如果选择此单选框，会有2个track
-    })
-        .then(mediaStream => {
-            console.log(mediaStream)
-            let video1 = document.getElementById('video1')
-            video1.srcObject = mediaStream
+    function startScreenShare() {
+        navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: true,// 添加此行时，【选择要分享什么】窗口的【Chrome标签页】tab下面会有一个单选框【分享标签页中的音频】；如果选择此单选框，会有2个track
+        })
+            .then(mediaStream => {
+                console.log(mediaStream)
+                let video1 = document.getElementById('video1')
+                video1.srcObject = mediaStream
 
-            // 点击漂浮栏中的【停止共享】按钮，MediaStream 触发 oninactive 事件，同时 MediaStreamTrack 触发 onended 事件
-            mediaStream.oninactive = () => {
-                console.log('mediaStream oninactive')
-            }
-
-            mediaStream.getTracks().forEach(track => {
-                console.log('track:', track)
-            })
-            if (mediaStream.getAudioTracks().length > 0) {
-                let audioTrack = mediaStream.getAudioTracks()[0];
-                audioTrack.onended = () => {
-                    console.log('audio track onended')
+                // 点击漂浮栏中的【停止共享】按钮，MediaStream 触发 oninactive 事件，同时 MediaStreamTrack 触发 onended 事件
+                mediaStream.oninactive = () => {
+                    console.log('mediaStream oninactive')
                 }
-            }
-            if (mediaStream.getVideoTracks().length > 0) {
-                let videoTrack = mediaStream.getVideoTracks()[0];
-                videoTrack.onended = () => {
-                    console.log('video track onended')
-                }
-            }
 
-            setTimeout(() => {
-                // MediaStream 中所有的 track，都stop()后，【停止共享】所在的漂浮栏消失
+                mediaStream.getTracks().forEach(track => {
+                    console.log('track:', track)
+                })
                 if (mediaStream.getAudioTracks().length > 0) {
-                    console.log("audio track stop()")
-                    mediaStream.getAudioTracks()[0].stop()
+                    let audioTrack = mediaStream.getAudioTracks()[0];
+                    audioTrack.onended = () => {
+                        console.log('audio track onended')
+                    }
                 }
                 if (mediaStream.getVideoTracks().length > 0) {
-                    console.log("video track stop()")
-                    mediaStream.getVideoTracks()[0].stop()
+                    let videoTrack = mediaStream.getVideoTracks()[0];
+                    videoTrack.onended = () => {
+                        console.log('video track onended')
+                    }
                 }
-            }, 3 * 1000)
-        })
-        .catch(err => {
-            console.log(typeof err)
-            console.log(err)
-        })
+
+                setTimeout(() => {
+                    // MediaStream 中所有的 track，都stop()后，【停止共享】所在的漂浮栏消失
+                    // if (mediaStream.getAudioTracks().length > 0) {
+                    //     console.log("audio track stop()")
+                    //     mediaStream.getAudioTracks()[0].stop()
+                    // }
+                    // if (mediaStream.getVideoTracks().length > 0) {
+                    //     console.log("video track stop()")
+                    //     mediaStream.getVideoTracks()[0].stop()
+                    // }
+                }, 3 * 1000)
+            })
+            .catch(err => {
+                console.log(typeof err)
+                console.log(err)
+            })
+    }
 </script>
+
+<button onclick="startScreenShare()">点击发起屏幕分享</button>
 </body>
 </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    html {
+        width: 100%;
+        height: 100%;
+    }
+    body {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<!--<canvas id="placeholderCanvas" style="width: 400px; height: 200px;"></canvas>-->
+<canvas id="placeholderCanvas" style="width: 100%; height: 100%;"></canvas>
+
+<script>
+    let placeholderCanvas = document.getElementById("placeholderCanvas")
+    let cW = placeholderCanvas.width;    // 获取元素宽度
+    let cH = placeholderCanvas.height;   // 获取元素高度
+    let ctx = placeholderCanvas.getContext("2d")
+
+    let imgObj = new Image();
+    imgObj.src = "../my-demos/img/placeholder_image.jpg"
+    imgObj.onload = function () {
+        ctx.drawImage(imgObj, 0, 0, cW, cH)
+    }
+
+    let canvasStream = placeholderCanvas.captureStream(25);
+    console.log(canvasStream);
+    canvasStream.getTracks().forEach(track => {
+        console.log(track);
+    })
+</script>
+</body>
+</html>

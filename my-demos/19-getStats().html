@@ -76,6 +76,16 @@
         })
         .then(() => {
             console.log(111)
+            return peerConnection.getStats()
+        })
+        .then(statsReport => {
+            console.log(statsReport)
+            statsReport.forEach((value, key) => {
+                console.log("key:")
+                console.log(key)
+                console.log("value:")
+                console.log(value)
+            })
         })
         .catch(err => {
             console.log(err)
