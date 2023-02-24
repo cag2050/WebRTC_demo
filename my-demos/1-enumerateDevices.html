@@ -10,6 +10,18 @@
     navigator.mediaDevices.enumerateDevices()
         .then(mediaDeviceInfos => {
             console.log(mediaDeviceInfos)
+            let audioinputDevices = mediaDeviceInfos.filter(item => {
+                return item.kind === "audioinput" && item.deviceId !== ""
+            })
+            console.log("audioinputDevices", audioinputDevices)
+            let videoinputDevices = mediaDeviceInfos.filter(item => {
+                return item.kind === "videoinput" && item.deviceId !== ""
+            })
+            console.log("videoinputDevices", videoinputDevices)
+            let audiooutputDevices = mediaDeviceInfos.filter(item => {
+                return item.kind === "audiooutput" && item.deviceId !== ""
+            })
+            console.log("audiooutputDevices", audiooutputDevices)
         })
         .catch(err => {
             console.log(err)
